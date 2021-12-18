@@ -16,11 +16,12 @@ class Cell {
     this.cost = cost;
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
+    this.neighbors = new ArrayList<>();
   }
   
   void show(float r, float g, float b) {
      fill(r, g, b);
-     rect(this.col * cellWidth, this.row * h, cellWidth, cellHeight);
+     rect(this.col * cellWidth, this.row * cellHeight, cellWidth, cellHeight);
   }
   
   void addNeighbors(ArrayList<ArrayList<Cell>> grid) {
