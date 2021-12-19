@@ -1,4 +1,5 @@
-import java.util.stream.Collectors;
+import java.util.stream.*;
+import java.util.Arrays;
 
 String[] input;  
 ArrayList<ArrayList<Cell>> grid;
@@ -13,7 +14,10 @@ long startTime = System.currentTimeMillis();
 
 void setup() {
   size(600,600);
-  input = loadStrings("input.txt");
+  input = loadStrings("inputTest.txt");
+  
+  // Pt .2 expand grid and increment values
+  input = expandInput(input);
   
   w = width / input[0].length();
   h = height / input.length;
@@ -31,13 +35,6 @@ void setup() {
     }
     grid.add(cells);
   };
-  
-  // Pt .2 expand grid and increment values
-  for (int i = 0; i < grid.size(); i++) {
-    ArrayList<Cell> row = grid.get(i);
-    
-  }
-  
   
   for (int i = 0; i < grid.size(); i++) {
     for (int j = 0; j < grid.get(0).size(); j++) {
@@ -171,4 +168,35 @@ void write(String text) {
   textSize(80);
   textAlign(CENTER);
   text(text, width / 2, height / 2);
+}
+
+String[] expandInput(String[] input) {
+  String[] expandedInput = new String[input.length * 5];
+  String previousString;
+  for (int i = 0; i < input.length; i++) {
+    String row = input[i];
+    StringBuilder sb = new StringBuilder(row);
+    previousString = row;
+    // four times
+    for (int j = 0; j < 4; j++) {
+      Stream<String> strStream = Arrays.stream(previousString.split(""));
+      strStream = strStream.map(charStr -> Integer.toString(Integer.parseInt(charStr) < 9 ? Integer.parseInt(charStr) + 1 : 1));
+      String[] strArr = strStream.toArray(String[]::new);
+      String joined = String.join("", strArr);
+      sb.append(joined);
+      previousString = joined;
+    }
+    expandedInput[i] = sb.toString();
+  }
+  
+  for (int i = input.length; i < expandedInput.length; i++) {
+    String lineToIncrement = expandedInput[i - input.length];
+    Stream<String> strStream = Arrays.stream(lineToIncrement.split(""));
+    strStream = strStream.map(charStr -> Integer.toString(Integer.parseInt(charStr) < 9 ? Integer.parseInt(charStr) + 1 : 1));
+    String[] strArr = strStream.toArray(String[]::new);
+    String joined = String.join("", strArr);
+    expandedInput[i] = joined;
+  }
+  
+  return expandedInput;
 }
